@@ -12,18 +12,24 @@ import { Link } from "react-router-dom";
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-
+  const [search, setSearch] = useState("");
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch(
+      "https://evening-tundra-42456.herokuapp.com/products?search=" + search
+    )
       .then((res) => res.json())
       .then((data) => setProducts(data));
-  }, []);
+  }, [search]);
+
+  const handelblur = (event) => {
+    setSearch(event.target.value);
+  };
 
   useEffect(() => {
     //cart
     const savedCart = getDatabaseCart();
     const productKeys = Object.keys(savedCart);
-    fetch("http://localhost:5000/productsByKeys", {
+    fetch("https://evening-tundra-42456.herokuapp.com/productsByKeys", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(productKeys),
@@ -53,6 +59,7 @@ const Shop = () => {
   return (
     <div className="twin-container">
       <div className="product-container">
+        <input type="text" onBlur={handelblur} name="" id="" />
         {products.map((pd) => (
           <Product
             key={pd.key}
